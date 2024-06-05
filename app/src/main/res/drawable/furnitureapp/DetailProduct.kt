@@ -1,4 +1,4 @@
-package com.poly.assigment_kotlin.component
+package com.quynhlm.dev.furnitureapp
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,6 +24,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -31,17 +33,15 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
-import com.poly.assigment_kotlin.R
-import com.poly.assigment_kotlin.ui.theme.fontNunitoSans
 
 @Composable
-fun Detail(navController: NavController ){
+fun DetailsProduct(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        Custom()
+        Custom(navController)
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -52,7 +52,7 @@ fun Detail(navController: NavController ){
                 text = "Minimal Stand",
                 fontSize = 24.sp,
                 fontWeight = FontWeight(500),
-                fontFamily = fontNunitoSans
+                fontFamily = FontFamily(Font(R.font.gelasio_bold))
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -63,7 +63,7 @@ fun Detail(navController: NavController ){
                     text = "\$ 50",
                     fontSize = 30.sp,
                     fontWeight = FontWeight(700),
-                    fontFamily = fontNunitoSans
+                    fontFamily = FontFamily(Font(R.font.nunitosans_7pt_condensed_bold))
                 )
                 Row(
                     modifier = Modifier.width(113.dp),
@@ -87,7 +87,9 @@ fun Detail(navController: NavController ){
                         text = "01",
                         fontSize = 18.sp,
                         fontWeight = FontWeight(700),
-                        fontFamily = fontNunitoSans
+                        fontFamily = FontFamily(
+                            Font(R.font.nunitosans_7pt_condensed_bold)
+                        )
                     )
                     Box(
                         modifier = Modifier
@@ -114,7 +116,9 @@ fun Detail(navController: NavController ){
                     text = "4.5",
                     fontSize = 18.sp,
                     fontWeight = FontWeight(700),
-                    fontFamily = fontNunitoSans,
+                    fontFamily = FontFamily(
+                        Font(R.font.nunitosans_7pt_condensed_bold)
+                    ),
                     modifier = Modifier.padding(7.dp)
                 )
                 Text(
@@ -122,12 +126,12 @@ fun Detail(navController: NavController ){
                     fontSize = 14.sp,
                     fontWeight = FontWeight(500),
                     color = Color("#808080".toColorInt()),
-                    fontFamily = fontNunitoSans,
-                    modifier = Modifier
-                        .padding(start = 15.dp)
-                        .clickable {
-                            navController.navigate("rating")
-                        }
+                    fontFamily = FontFamily(
+                        Font(R.font.nunitosans_7pt_condensed_bold)
+                    ),
+                    modifier = Modifier.padding(start = 15.dp).clickable {
+                        navController.navigate("rating")
+                    }
                 )
             }
             Text(
@@ -136,7 +140,9 @@ fun Detail(navController: NavController ){
                 textAlign = TextAlign.Justify,
                 fontWeight = FontWeight(500),
                 color = Color("#606060".toColorInt()),
-                fontFamily = fontNunitoSans
+                fontFamily = FontFamily(
+                    Font(R.font.nunitosans_7pt_condensed_light)
+                )
             )
 
             Row(
@@ -177,7 +183,7 @@ fun Detail(navController: NavController ){
                         Text(
                             text = "Add to cart",
                             color = Color.White,
-                            fontFamily = fontNunitoSans,
+                            fontFamily = FontFamily(Font(R.font.nunitosans_7pt_condensed_light)),
                             fontWeight = FontWeight(600),
                             fontSize = 17.sp
                         )
@@ -186,11 +192,10 @@ fun Detail(navController: NavController ){
             }
         }
     }
-
 }
 
 @Composable
-fun Custom() {
+fun Custom(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -231,7 +236,7 @@ fun Custom() {
                 Row(
                     modifier = Modifier
                         .size(45.dp)
-                        .clickable { }
+                        .clickable { navController.navigateUp() }
                         .background(color = Color.White, RoundedCornerShape(14.dp))
                         .shadow(
                             elevation = 0.dp,
@@ -273,3 +278,4 @@ fun Custom() {
         }
     }
 }
+

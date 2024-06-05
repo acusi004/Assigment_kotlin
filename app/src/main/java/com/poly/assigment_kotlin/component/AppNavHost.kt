@@ -2,8 +2,10 @@ package com.poly.assigment_kotlin.component
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 
 enum class ROUTE_NAME{
     welcome,
@@ -33,7 +35,9 @@ fun AppNavHost(
         composable(ROUTE_NAME.login.name) { DangNhap(navController) }
         composable(ROUTE_NAME.home.name) { BottomNavigationApp(navController) }
         composable(ROUTE_NAME.signup.name) { DangKy(navController) }
-        composable(ROUTE_NAME.detail.name) { Detail(navController) }
+        composable(ROUTE_NAME.detail.name) {
+            Detail(navController)
+        }
         composable(ROUTE_NAME.cart.name) { Cart(navController) }
         composable(ROUTE_NAME.checkout.name) { CheckOut(navController) }
         composable(ROUTE_NAME.success.name) { FinalCheckout(navController) }
