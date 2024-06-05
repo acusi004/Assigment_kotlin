@@ -1,10 +1,10 @@
-package com.poly.assigment_kotlin.screen
+package com.poly.assigment_kotlin.component
 
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,21 +15,37 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,35 +66,125 @@ import com.poly.assigment_kotlin.ui.theme.xam
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.input.pointer.PointerIcon
-import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
+import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.poly.assigment_kotlin.Model.Interior
+import com.poly.assigment_kotlin.ui.theme.WhiteO
 import com.poly.assigment_kotlin.ui.theme.fontNunitoSans
 import com.poly.assigment_kotlin.ui.theme.xamDam
-
-
+enum class ROUTE_HOME_SCREEN {
+    Home,
+    Favorite,
+    Notification,
+    Profile
+}
+data class BottomNavigationItem(
+    val title: String,
+    val selectIcon: ImageVector,
+    var unselectItem: ImageVector
+)
 @Composable
 fun Home(navController: NavController){
-
-
-
     Column (
         modifier = Modifier
             .fillMaxSize()
     ){
         MyTopAppBar()
         Categories()
-        ListProduct()
+        ListProduct(navController = navController)
 
     }
 }
+
+@Composable
+fun NavigationGraph(navHostController : NavController, navController: NavHostController, innerPadding: PaddingValues) {
+    NavHost(
+        navController,
+        startDestination = ROUTE_HOME_SCREEN.Home.name,
+        modifier = Modifier.padding(innerPadding)
+    ) {
+        composable(ROUTE_HOME_SCREEN.Home.name) { Home( navHostController) }
+        composable(ROUTE_HOME_SCREEN.Favorite.name) { Favorites(navController) }
+        composable(ROUTE_HOME_SCREEN.Notification.name) { Notification(navController) }
+        composable(ROUTE_HOME_SCREEN.Profile.name) { Profile(navHostController) }
+    }
+}
+@Composable
+fun BottomNavigationBar(
+    items: List<BottomNavigationItem>,
+    selectedItemIndex: Int,
+    onItemSelected: (Int) -> Unit
+) {
+    NavigationBar(
+        containerColor = Color("#ffffff".toColorInt())
+    ) {
+        items.forEachIndexed { index, item ->
+            NavigationBarItem(
+                selected = selectedItemIndex == index,
+                onClick = { onItemSelected(index) },
+                icon = {
+                    Icon(
+                        imageVector = if (selectedItemIndex == index) item.selectIcon else item.unselectItem,
+                        contentDescription = item.title,
+                        modifier = Modifier.size(24.dp)
+                    )
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = colorResource(id = android.R.color.black),
+                    unselectedIconColor = Color.Gray
+                )
+            )
+        }
+    }
+}
+@Composable
+fun BottomNavigationApp(navHostController : NavController) {
+    val navController = rememberNavController()
+    val items = listOf(
+        BottomNavigationItem(ROUTE_HOME_SCREEN.Home.name, Icons.Default.Home, Icons.Outlined.Home),
+        BottomNavigationItem(ROUTE_HOME_SCREEN.Favorite.name, Icons.Default.Favorite, Icons.Outlined.Favorite),
+        BottomNavigationItem(
+            "Notification",
+            Icons.Default.Notifications,
+            Icons.Outlined.Notifications
+        ),
+        BottomNavigationItem(ROUTE_HOME_SCREEN.Profile.name, Icons.Default.Person, Icons.Outlined.Person)
+    )
+    var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Scaffold(
+
+            bottomBar = {
+                BottomNavigationBar(
+                    items = items,
+                    selectedItemIndex = selectedItemIndex,
+                    onItemSelected = { index ->
+                        selectedItemIndex = index
+                        navController.navigate(items[index].title)
+                    }
+                )
+            }
+        ) { innerPadding ->
+            NavigationGraph(navHostController = navHostController,navController = navController, innerPadding = innerPadding)
+        }
+    }
+}
+
 @Composable
 fun titleTopBar1(text: String){
     Text(
@@ -163,11 +269,6 @@ fun Categories(){
                         .size(50.dp)
                         .background(color = if (item.image == 0) Color.Black else xam)
                         .padding(8.dp),
-
-
-
-
-
                 )
                 Text(text = item.name)
 
@@ -177,9 +278,8 @@ fun Categories(){
 }
 
 @Composable
-fun ListProduct(interiorViewModel: InteriorViewModel = viewModel()){
+fun ListProduct(interiorViewModel: InteriorViewModel = viewModel(), navController: NavController){
     val interior by interiorViewModel.interior.observeAsState(listOf())
-    val errorMessage by interiorViewModel.errorMessage.observeAsState("")
 
     LaunchedEffect(Unit) {
         interiorViewModel.getInterior()
@@ -194,7 +294,7 @@ fun ListProduct(interiorViewModel: InteriorViewModel = viewModel()){
 
     ) {
         items(interior) {item ->
-            interiorItem(item = item)
+            InteriorItem(item = item, navController = navController)
         }
 
     }
@@ -205,9 +305,10 @@ fun ListProduct(interiorViewModel: InteriorViewModel = viewModel()){
 
 
 @Composable
-fun interiorItem(item: Interior,){
-
-    val navController = rememberNavController()
+fun InteriorItem(item: Interior, navController: NavController){
+    val iconColor = remember{ mutableStateOf(Color.Unspecified) }
+    val context = LocalContext.current
+    val scrollState = rememberScrollState()
     Card (
         colors = CardDefaults.cardColors(containerColor = Color.White),
 
@@ -215,11 +316,12 @@ fun interiorItem(item: Interior,){
         .width(157.dp)
         .height(270.dp)
         .clickable {
-
+            navController.navigate("Detail")
         }
-
     ){
-      Column {
+      Column(
+
+      ) {
          Box(
              modifier = Modifier
                  .fillMaxWidth()
@@ -231,8 +333,6 @@ fun interiorItem(item: Interior,){
                  modifier = Modifier
                      .fillMaxWidth()
                      .height(200.dp)
-
-
              )             
            Column(
                modifier = Modifier
@@ -244,7 +344,7 @@ fun interiorItem(item: Interior,){
 
 
            ){
-               val iconColor = remember{ mutableStateOf(Color.Unspecified) }
+
                IconButton(
                    onClick = {
 
@@ -254,7 +354,26 @@ fun interiorItem(item: Interior,){
 
 
                ){
-                   Icon(painter = painterResource(id = R.drawable.love), tint = iconColor.value, contentDescription = null, modifier = Modifier.size(20.dp).clickable { iconColor.value = Color.Red })
+                   Icon(
+                       painter = painterResource(id = R.drawable.love),
+                       tint = iconColor.value,
+                       contentDescription = null,
+                       modifier = Modifier
+                           .size(20.dp)
+                           .clickable {
+                               if (!item.favorite) {
+                                   Toast
+                                       .makeText(
+                                           context,
+                                           "Đã thêm ${item.name} vào yêu thích",
+                                           Toast.LENGTH_SHORT
+                                       )
+                                       .show()
+                                   iconColor.value = Color.Red
+                               } else {
+                                   iconColor.value = Color.Black
+                               }
+                           })
                }
                IconButton(
                    onClick = {
@@ -271,7 +390,7 @@ fun interiorItem(item: Interior,){
            }
          }
           Text(
-              text = "${item.name}",
+              text = item.name,
               fontFamily= fontNunitoSans,
               fontSize = 19.sp,
               color = Color.DarkGray,

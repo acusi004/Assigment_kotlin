@@ -6,5 +6,6 @@ data class Interior(
     val description: String,
     val price: Int,
     val type:String,
-    val image:String
+    val image:String,
+    val favorite:Boolean
 )

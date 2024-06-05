@@ -16,7 +16,7 @@
         android:theme="@style/Theme.Assigment_kotlin"
         tools:targetApi="31">
         <activity
-            android:name=".screen.MainActivity"
+            android:name=".component.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Assigment_kotlin">

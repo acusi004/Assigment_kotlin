@@ -1,4 +1,4 @@
-package com.poly.assigment_kotlin.screen
+package com.poly.assigment_kotlin.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

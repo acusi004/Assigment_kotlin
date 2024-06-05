@@ -1,4 +1,4 @@
-package com.poly.assigment_kotlin.screen
+package com.poly.assigment_kotlin.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,7 +19,6 @@ import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,7 +63,10 @@ fun ManHinhChao(navController: NavController) {
                         .height(54.dp)
 
                     ,onClick = {
-                        navController.navigate("dangNhap")
+                        navController.navigate("login"){
+                            popUpTo("ManHinhChao"){inclusive =true}
+                        }
+
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Black,

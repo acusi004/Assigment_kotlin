@@ -1,4 +1,4 @@
-package com.poly.assigment_kotlin.screen
+package com.poly.assigment_kotlin.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -146,7 +146,9 @@ fun formRegister(navController: NavController){
 
 
                 ,onClick = {
-                    navController.navigate("dangNhap")
+                    navController.navigate("login"){
+                        popUpTo("signup"){inclusive =true}
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Black,
