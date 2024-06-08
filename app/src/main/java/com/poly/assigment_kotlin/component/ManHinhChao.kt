@@ -64,7 +64,7 @@ fun ManHinhChao(navController: NavController) {
 
                     ,onClick = {
                         navController.navigate("login"){
-                            popUpTo("ManHinhChao"){inclusive =true}
+                            popUpTo("Welcome"){inclusive =true}
                         }
 
                     },

@@ -15,8 +15,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,17 +38,23 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import com.poly.assigment_kotlin.Model.Interior
 import com.poly.assigment_kotlin.R
+import com.poly.assigment_kotlin.services.InteriorServices
 import com.poly.assigment_kotlin.ui.theme.fontNunitoSans
+import kotlinx.coroutines.launch
 
 @Composable
-fun Detail(navController: NavController ){
+fun Detail( navController: NavController,item: Interior){
+    val counter = remember { mutableStateOf(0) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        Custom()
+        Custom(item)
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -49,7 +62,7 @@ fun Detail(navController: NavController ){
             verticalArrangement = Arrangement.SpaceAround
         ) {
             Text(
-                text = "Minimal Stand",
+                text = item.name,
                 fontSize = 24.sp,
                 fontWeight = FontWeight(500),
                 fontFamily = fontNunitoSans
@@ -60,7 +73,7 @@ fun Detail(navController: NavController ){
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "\$ 50",
+                    text = "$ ${item.price}",
                     fontSize = 30.sp,
                     fontWeight = FontWeight(700),
                     fontFamily = fontNunitoSans
@@ -77,14 +90,14 @@ fun Detail(navController: NavController ){
                             .background(color = Color("#E0E0E0".toColorInt())),
                         contentAlignment = Alignment.Center
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.add),
-                            contentDescription = null,
-                            modifier = Modifier.size(13.dp)
-                        )
+                       IconButton(onClick = {counter.value+=1 }) {
+                           Image(painter = painterResource(id = R.drawable.add),
+                               contentDescription = null,
+                               modifier = Modifier.size(13.dp) )
+                       }
                     }
                     Text(
-                        text = "01",
+                        text = "${counter.value}",
                         fontSize = 18.sp,
                         fontWeight = FontWeight(700),
                         fontFamily = fontNunitoSans
@@ -96,11 +109,13 @@ fun Detail(navController: NavController ){
                             .background(color = Color("#E0E0E0".toColorInt())),
                         contentAlignment = Alignment.Center
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.apart),
-                            contentDescription = null,
-                            modifier = Modifier.size(13.dp)
-                        )
+                       IconButton(onClick = { counter.value -=1 }) {
+                           Image(
+                               painter = painterResource(id = R.drawable.apart),
+                               contentDescription = null,
+                               modifier = Modifier.size(13.dp)
+                           )
+                       }
                     }
                 }
             }
@@ -131,7 +146,7 @@ fun Detail(navController: NavController ){
                 )
             }
             Text(
-                text = "Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. ",
+                text = item.description,
                 fontSize = 15.sp,
                 textAlign = TextAlign.Justify,
                 fontWeight = FontWeight(500),
@@ -190,7 +205,7 @@ fun Detail(navController: NavController ){
 }
 
 @Composable
-fun Custom() {
+fun Custom(item: Interior) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -204,9 +219,10 @@ fun Custom() {
                 Box {
 
                 }
-                Image(
-                    painter = painterResource(id = R.drawable.imagedetails),
-                    contentDescription = null,
+                AsyncImage(
+                    model = item.image,
+                    contentDescription = null
+                    ,
                     modifier = Modifier
                         .width(330.dp)
                         .fillMaxHeight()
@@ -215,7 +231,8 @@ fun Custom() {
                             shape = RoundedCornerShape(bottomStart = 52.dp)
                         )
                         .zIndex(1f),
-                    contentScale = ContentScale.FillBounds
+                    contentScale = ContentScale.Crop
+
                 )
             }
         }

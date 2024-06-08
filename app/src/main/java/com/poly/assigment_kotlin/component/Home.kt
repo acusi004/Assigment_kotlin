@@ -79,10 +79,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.google.gson.Gson
 import com.poly.assigment_kotlin.Model.Interior
 import com.poly.assigment_kotlin.ui.theme.WhiteO
 import com.poly.assigment_kotlin.ui.theme.fontNunitoSans
 import com.poly.assigment_kotlin.ui.theme.xamDam
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+
 enum class ROUTE_HOME_SCREEN {
     Home,
     Favorite,
@@ -316,7 +320,9 @@ fun InteriorItem(item: Interior, navController: NavController){
         .width(157.dp)
         .height(270.dp)
         .clickable {
-            navController.navigate("Detail")
+            val itemJson = Gson().toJson(item)
+            val encodedJson = URLEncoder.encode(itemJson, StandardCharsets.UTF_8.toString())
+            navController.navigate("detail/${encodedJson}")
         }
     ){
       Column(
