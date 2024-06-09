@@ -104,7 +104,7 @@ fun Home(navController: NavController){
         modifier = Modifier
             .fillMaxSize()
     ){
-        MyTopAppBar()
+        MyTopAppBar(navController)
         Categories()
         ListProduct(navController = navController)
 
@@ -210,7 +210,7 @@ fun titleTopBar2(text: String){
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBar(){
+fun MyTopAppBar(navController: NavController){
     CenterAlignedTopAppBar(
         title = {
                 Column {
@@ -227,7 +227,7 @@ fun MyTopAppBar(){
                         .size(26.dp))
             }
         }, actions = {
-            IconButton(onClick = {  }) {
+            IconButton(onClick = { navController.navigate("cart")  }) {
                 Icon(
                     painter = painterResource(id = R.drawable.trolley),
                     contentDescription =null,
@@ -284,9 +284,11 @@ fun Categories(){
 @Composable
 fun ListProduct(interiorViewModel: InteriorViewModel = viewModel(), navController: NavController){
     val interior by interiorViewModel.interior.observeAsState(listOf())
+    
 
     LaunchedEffect(Unit) {
         interiorViewModel.getInterior()
+
     }
 
     LazyVerticalStaggeredGrid(
@@ -294,7 +296,7 @@ fun ListProduct(interiorViewModel: InteriorViewModel = viewModel(), navControlle
         verticalItemSpacing = 8.dp,
         state = rememberLazyStaggeredGridState(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(8.dp)
+        contentPadding = PaddingValues(8.dp),
 
     ) {
         items(interior) {item ->

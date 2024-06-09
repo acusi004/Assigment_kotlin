@@ -2,7 +2,6 @@ package com.poly.assigment_kotlin.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,11 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -27,28 +24,26 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.poly.assigment_kotlin.R
 import com.poly.assigment_kotlin.ui.theme.fontNunitoSans
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddressScreen(navController : NavController) {
+fun SelectPaymentScreen (navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        "Shipping address",
+                        "Payment method",
                         textAlign = TextAlign.Center,
                         fontSize = 17.sp,
                         modifier = Modifier.fillMaxWidth(),
@@ -56,7 +51,7 @@ fun AddressScreen(navController : NavController) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
+                    IconButton(onClick = { navController.navigateUp()}) {
                         Icon(
                             painter = painterResource(id = R.drawable.arrowback),
                             contentDescription = null,
@@ -76,7 +71,7 @@ fun AddressScreen(navController : NavController) {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-
+                    navController.navigate("addPayment")
                 },
             ) {
                 Icon(
@@ -86,59 +81,41 @@ fun AddressScreen(navController : NavController) {
             }
         },
         content = { innerPadding ->
-            SelectAddress(innerPadding)
+            PaymentMethodScreen(innerPadding)
         }
     )
 }
-
 @Composable
-fun SelectAddress(innerPaddingValues: PaddingValues){
+fun PaymentMethodScreen(innerPaddingValues: PaddingValues){
     Column (modifier = Modifier
         .fillMaxSize()
-        .background(Color.White)
-        .padding(start = 10.dp, innerPaddingValues.calculateTopPadding(), end = 10.dp)){
+        .padding(start = 0.dp,innerPaddingValues.calculateTopPadding(),
+            end = 0.dp)
+        .background(Color.White)) {
+
         LazyColumn{
-            items(6) {item ->
-                ItemAddress()
+            items(2) {
+                    ite -> PaymentMethodItem()
             }
         }
     }
 }
+
 @Composable
-fun ItemAddress(){
+fun PaymentMethodItem() {
     Column (modifier = Modifier
         .fillMaxWidth()
-        .height(180.dp)
-        .background(Color.White),
-        verticalArrangement = Arrangement.SpaceBetween){
+        .height(265.dp)
+        .background(Color.White)) {
+        Image(painter = painterResource(id = R.drawable.payment_card), contentDescription = null , modifier = Modifier
+            .fillMaxWidth()
+            .height(230.dp), contentScale = ContentScale.FillBounds)
+
         Row (modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
             Checkbox(checked = false, onCheckedChange = {})
-            Text(text = "Use as the shipping address",
+            Text(text = "Use as default payment method",
                 fontSize = 18.sp, fontWeight = FontWeight(400)
             )
-        }
-        Column (modifier = Modifier
-            .fillMaxWidth()
-            .height(130.dp)
-            .background(Color("#ffffff".toColorInt()))
-            .shadow(0.dp, RoundedCornerShape(8.dp), clip = true),
-            verticalArrangement = Arrangement.SpaceEvenly){
-            Row (modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 15.dp, end = 10.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween){
-                Text(text = "Bruno Fernandes", fontSize = 20.sp, fontWeight = FontWeight(700), fontFamily = fontNunitoSans)
-                Image(painter = painterResource(id = R.drawable.edit), modifier = Modifier.size(24.dp), contentDescription = null)
-            }
-            Divider(
-                color = Color.Gray,
-                thickness = 1.5.dp)
-
-            Column (modifier = Modifier.padding(start = 15.dp)){
-                Text(text = "25 rue Robert Latouche, Nice, 06200, Côte", color = Color.Gray, fontSize = 15.sp, fontFamily = fontNunitoSans, fontWeight = FontWeight(500)
-                )
-                Text(text = "D’azur, France"
-                    , fontSize = 15.sp,color = Color.Gray, fontFamily = fontNunitoSans)
-            }
         }
     }
 }

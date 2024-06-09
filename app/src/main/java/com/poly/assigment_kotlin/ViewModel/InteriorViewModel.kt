@@ -1,5 +1,10 @@
 package com.poly.assigment_kotlin.ViewModel
 
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.runtime.MutableIntState
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -39,7 +44,22 @@ class InteriorViewModel: ViewModel() {
         }
     }
 
+    fun addCart(id: Int, image: String, name: String, price: Int,quantity: Int){
+        val _addToCartResult = MutableLiveData<Result<Unit>>()
 
+        viewModelScope.launch {
+            try{
+                val retrofitService = RetrofitServices.interiorServices
+                retrofitService.addCart(Cart(id, image, name, price, quantity))
+                _addToCartResult.value = Result.success(Unit)
+                Log.d("CartViewModel", "Product added to cart successfully")
+            }catch (err: Exception){
+                errorMessage.postValue(err.message)
+            }
+
+            getCart()
+        }
+    }
     fun getCart(){
         viewModelScope.launch {
             val retrofitServices = RetrofitServices.interiorServices

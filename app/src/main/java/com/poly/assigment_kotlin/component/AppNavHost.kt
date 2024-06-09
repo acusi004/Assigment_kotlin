@@ -10,6 +10,7 @@ import androidx.navigation.navArgument
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.poly.assigment_kotlin.Model.Interior
+import com.poly.assigment_kotlin.ViewModel.InteriorViewModel
 import com.poly.assigment_kotlin.services.InteriorServices
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
@@ -53,10 +54,11 @@ fun AppNavHost(
         }
 
         composable(ROUTE_NAME.cart.name) { Cart(navController) }
-        composable(ROUTE_NAME.checkout.name) { CheckOut(navController) }
-        composable(ROUTE_NAME.success.name) { FinalCheckout(navController) }
-        composable(ROUTE_NAME.order.name) { Order(navController) }
-        composable(ROUTE_NAME.addShipment.name) { ShippingAddress(navController) }
+        composable(ROUTE_NAME.order.name) { OrderScreenRun(navController) }
+        composable(ROUTE_NAME.selectShipment.name) { AddressScreen(navController) }
+        composable(ROUTE_NAME.myReview.name) { MyReViewTopBar(navController) }
+        composable(ROUTE_NAME.paymentMethod.name) { SelectPaymentScreen(navController) }
+        composable(ROUTE_NAME.setting.name) { settingScreens(navController) }
 
     }
 }
